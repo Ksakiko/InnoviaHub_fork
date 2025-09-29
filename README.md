@@ -1,4 +1,4 @@
-# InnoviaHub
+# InnoviaHub (Skolprojekt både i grupp och individuellt)
 
 Ett enkelt bokningssystem för resurser och faciliteter.
 

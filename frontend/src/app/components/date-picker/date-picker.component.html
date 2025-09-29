@@ -1,0 +1,13 @@
+<div class="calendar-card">
+  <mat-calendar
+    [selected]="selected"
+    [startAt]="selected ?? today"
+    (selectedChange)="onCalendarSelected($event)"
+    [minDate]="minDateAsDate"
+    [maxDate]="maxDateAsDate"
+    [dateClass]="dateClass"
+    [headerComponent]="headerCmp"
+    startView="month"
+  >
+  </mat-calendar>
+</div>

@@ -1,0 +1,80 @@
+<div class="rounded-2xl bg-bg-alt p-5">
+  <h2 class="text-xl font-semibold text-heading mb-1">
+    {{ title() }}
+    <span *ngIf="booking" class=""> {{ booking.id }} </span>
+  </h2>
+
+  <div class="text-sm opacity-70 mb-4 text-[#993f3b]" *ngIf="booking">
+    Resurs: {{ booking.resourceName }} <br />
+    Av: {{ booking.userId }}
+  </div>
+
+  <div
+    *ngIf="!booking && !loading"
+    class="text-sm text-heading/70 text-[#993f3b]"
+  >
+    Ingen bokning vald.
+  </div>
+  <div *ngIf="error" class="text-sm text-error mb-3">{{ error }}</div>
+
+  <form *ngIf="booking" [formGroup]="form" class="space-y-4">
+    <div>
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mb-1 text-[#993f3b]"
+      >
+        Start
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <input
+          type="date"
+          formControlName="startDate"
+          min="{{ currentDate }}"
+          class="rounded-md border border-border bg-white px-3 py-2"
+        />
+        <input
+          type="time"
+          formControlName="startTime"
+          class="rounded-md border border-border bg-white px-3 py-2"
+        />
+      </div>
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mt-2 text-[#993f3b]"
+      >
+        Slut
+      </div>
+      <div class="grid grid-cols-2 gap-3 mt-1">
+        <input
+          type="date"
+          formControlName="endDate"
+          min="{{ currentDate }}"
+          class="rounded-md border border-border bg-white px-3 py-2"
+        />
+        <input
+          type="time"
+          formControlName="endTime"
+          class="rounded-md border border-border bg-white px-3 py-2"
+        />
+      </div>
+    </div>
+
+    <div class="pt-2 flex items-center gap-4">
+      <app-button
+        label="Ändra"
+        [buttonStyle]="'filled'"
+        [borderRadius]="'br-full'"
+        [bgColor]="'var(--color-primary)'"
+        [textColor]="'#fff'"
+        (onClick)="save()"
+      ></app-button>
+
+      <app-button
+        label="Radera"
+        [buttonStyle]="'outlined'"
+        [borderRadius]="'br-full'"
+        [bgColor]="'var(--color-primary)'"
+        [textColor]="'#993f3b'"
+        (onClick)="remove()"
+      ></app-button>
+    </div>
+  </form>
+</div>

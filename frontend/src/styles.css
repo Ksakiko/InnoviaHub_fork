@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Form */
+  --color-form-border: #767676;
+  --color-form-label-bg: #fff;
+
+  /* Menubar Settings */
+  --color-menu-bg: #ffe0dc;
+  --color-icon: #49454f;
+  --color-icon-active: #993f3b;
+  --color-menu-label-acitve: #cc6258;
+  --color-icon-hover: #ece6ee;
+
+  --menubar-desktop-width: 100px;
+  --menubar-mobile-height: 85px;
+
+  /* Page Margin */
+  --page-margin-desktop: 3rem;
+  --page-margin-tablet: 2rem;
+  --page-margin-mobile: 1rem;
+
+  /* Light Theme Base */
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
+
+  /* Dark Theme Base */
+  --color-dark-primary: #ff7e70; /* salmon */
+  --color-dark-primary-dark: #cc6258; /* mörkare salmon */
+  --color-dark-primary-dark-alt: #993f3b; /* ännu mörkare salmon */
+  --color-dark-highlight: #ff998d; /* ljusare salmon */
+
+  --color-dark-bg: #1a0f0d; /* väldigt mörk bakgrund i salmon-ton */
+  --color-dark-bg-alt: #331f1c; /* lite ljusare mörk bakgrund */
+  --color-dark-text: #ffe6e3; /* mycket ljus salmon för text */
+  --color-dark-heading: #ffffff; /* vit för maximal kontrast */
+  --color-dark-link: #ffb5aa; /* blek salmon */
+  --color-dark-border: #66312c; /* mörk salmon kant */
+  --color-dark-success: #ffad9f; /* ljus salmon som "success" */
+  --color-dark-error: #ff4c33; /* röd-salmon för error */
+  --color-dark-warning: #ff9f70; /* orange-salmon för warning */
+}
+
+[data-theme="dark"] {
+  --color-primary: var(--color-dark-primary);
+  --color-primary-dark: var(--color-dark-primary-dark);
+  --color-highlight: var(--color-dark-highlight);
+  --color-bg: var(--color-dark-bg);
+  --color-bg-alt: var(--color-dark-bg-alt);
+  --color-text: var(--color-dark-text);
+  --color-heading: var(--color-dark-heading);
+  --color-link: var(--color-dark-link);
+  --color-border: var(--color-dark-border);
+  --color-success: var(--color-dark-success);
+  --color-error: var(--color-dark-error);
+  --color-warning: var(--color-dark-warning);
+
+  /* Menubar Settings */
+  --color-menu-bg: #ffe0dc;
+  --color-icon: #ffffff;
+  --color-icon-active: #993f3b;
+  --color-menu-label-acitve: #ffd0cb;
+  --color-icon-hover: #c3c3c3;
+}
+
+[data-theme="light"] {
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
+}
+
+/* -------------- Tailwind Custom Theme -------------- */
+
+@theme {
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
+}
+
+html,
+body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  scrollbar-color: var(--color-border) var(--color-bg-alt);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+.non-protected-page-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.page-container {
+  width: 100%;
+  height: 100%;
+}
+
+.page-container__inner {
+  padding: var(--page-margin-mobile) var(--page-margin-mobile)
+    calc(var(--menubar-mobile-height) + var(--page-margin-mobile))
+    var(--page-margin-mobile);
+}
+
+@media (min-width: 768px) {
+  .page-container__inner {
+    padding: var(--page-margin-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    background-color: var(--color-bg-alt);
+  }
+
+  .page-container__inner {
+    padding: var(--page-margin-desktop);
+    border-radius: 30px;
+    position: fixed;
+    top: var(--page-margin-desktop);
+    right: var(--page-margin-desktop);
+    bottom: var(--page-margin-desktop);
+    left: var(--menubar-desktop-width);
+    overflow: auto;
+    background-color: #fff;
+  }
+}
+
+.material-symbols-rounded.msr {
+  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  font-size: 1.125rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 2s linear infinite;
+}

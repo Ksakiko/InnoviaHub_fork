@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
    public DbSet<Resource> Resources { get; set; }
    public DbSet<ResourceType> ResourceTypes { get; set; }
    public DbSet<Booking> Bookings { get; set; }
+   public DbSet<ChatMessage> ChatMessages { get; set; }
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)
    {

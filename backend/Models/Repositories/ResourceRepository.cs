@@ -14,4 +14,9 @@ public class ResourceRepository : IResourceRepository
 
     public async Task<Resource?> GetById(int id, CancellationToken ct = default) =>
         await _dbContext.Resources.Include(r => r.ResourceType).FirstOrDefaultAsync(r => r.Id == id, ct);
+
+    public async Task<List<Resource>> GetAllByResourceIdAsync(int id)
+    {
+        return await _dbContext.Resources.Where(x => x.ResourceTypeId == id).ToListAsync();
+    }
 }

@@ -36,16 +36,9 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] ChatRequestDTO request)
         {
-            // Store user message in database
-            var userMessage = new ChatMessage()
-            {
-                UserId = request.UserId,
-                Sender = "User",
-                Message = request.UserInput,
-                CreatedAt = DateTime.UtcNow
-            };
+            if (request == null) return Ok("Något gick fel. Försök igen.");
 
-            await _chatMessageRepository.AddAsync(userMessage);
+            await _chatMessageService.StoreMessage(request.UserId, request.UserInput, "User");
 
             // Analyze user's intent from user input
             var jsonString = await _chatGptService.AnalyzeUserIntent(request);
@@ -55,25 +48,13 @@ namespace backend.Controllers
             var intent = root.GetProperty("intent").ToString();
             var userRequest = root.GetProperty("request").ToString();
 
+            System.Console.WriteLine("-----------------");
+            System.Console.WriteLine(intent);
+            System.Console.WriteLine("-----------------");
+
             switch (intent)
             {
                 case "initialize_booking":
-                    // Extract booking info from user input
-                    if (request == null) return Ok("Något gick fel. Försök igen.");
-
-                    var bookingRequest = await _chatGptService.ExtractUserBookingRequest(request);
-
-                    if (bookingRequest == null ||
-                        bookingRequest.Resource == null ||
-                        bookingRequest.StartTime == null ||
-                        bookingRequest.EndTime == null)
-                    {
-                        // Return message to user for invalid input
-                        var  replyNotEnoughInfo = "Vänligen ange både önskad resurs och datum.";
-                        await _chatMessageService.StoreMessage(request.UserId, replyNotEnoughInfo, "AI");
-                        return Ok(replyNotEnoughInfo);
-                    }
-
 
                     var replyOptions = await _chatGptService.ProvideOptions(request);
 
@@ -94,32 +75,26 @@ namespace backend.Controllers
 
                     if (bookingInfoObj.Status == "Confirmed")
                     {
-                        try
-                        {
-                            var errorMessage = await _bookingService.HandleBooking(bookingInfoObj);
+                        var errorMessage = await _bookingService.HandleBooking(bookingInfoObj);
 
-                            if (errorMessage == "") return Ok(reply);
-
-                            return Ok(errorMessage);    
-                        } catch
+                        if (errorMessage == "")
                         {
-                            
+                            await _chatMessageService.StoreMessage(bookingRequestObj.UserId, reply, "AI");
+                            return Ok(reply);
                         }
+
+                        await _chatMessageService.StoreMessage(bookingRequestObj.UserId, errorMessage, "AI");
+                        return Ok(errorMessage);
                     }
 
                     await _chatMessageService.StoreMessage(bookingRequestObj.UserId, reply, "AI");
-
                     return Ok(reply);
-                    // return Ok(reply);
-                case "see_more_options":
-                    return Ok();
 
                 case "update_booking_info":
-                    // Ask for confirmation
-                    return Ok();
+                    var replyUpdate = await _chatGptService.ProvideOptions(request);
 
-                case "cancel_process":
-                    return Ok();
+                    await _chatMessageService.StoreMessage(request.UserId, replyUpdate, "AI");
+                    return Ok(replyUpdate);
 
                 default:
                     var replyAskToClarify = "Jag förstod inte vad du menade. Skulle du kunna förtydliga det?";

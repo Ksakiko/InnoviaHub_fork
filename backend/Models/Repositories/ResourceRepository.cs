@@ -19,4 +19,9 @@ public class ResourceRepository : IResourceRepository
     {
         return await _dbContext.Resources.Where(x => x.ResourceTypeId == id).ToListAsync();
     }
+
+    public async Task<Resource?> GetResourceByNameAsync(string name)
+    {
+        return await _dbContext.Resources.FirstOrDefaultAsync(x => x.Name == name);
+    }
 }

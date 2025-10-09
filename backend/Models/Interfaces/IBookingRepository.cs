@@ -12,4 +12,5 @@ public interface IBookingRepository
 
     //Kolla om en bokning krockar med en som redan finns
     Task<bool> HasOverlap(int resourceId, DateTime? start, DateTime? end, int? ignoreBookingId = null, CancellationToken ct = default);
+    IEnumerable<Booking> GetBookingsByUserId(Guid id);
 }

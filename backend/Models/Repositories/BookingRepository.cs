@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using backend.Hubs;
 using backend.Models.Entities;
 using backend.Models.Interfaces;
@@ -55,7 +56,7 @@ public class BookingRepository : IBookingRepository
             .Where(b => b.ResourceId == resourceId && (ignoreBookingId == null || b.Id != ignoreBookingId))
             .AnyAsync(b => start < b.EndTime && end > b.StartTime, ct);
     }
-    
+
     public async Task<Booking?> Update(Booking booking, CancellationToken ct = default)
     {
         var existing = await _dbContext.Bookings.FirstOrDefaultAsync(b => b.Id == booking.Id, ct);
@@ -67,5 +68,10 @@ public class BookingRepository : IBookingRepository
         //Skicka update eventet
         await _hubContext.Clients.All.SendAsync("BookingUpdated", booking, ct);
         return existing;
+    }
+    
+    public IEnumerable<Booking> GetBookingsByUserId(Guid id)
+    {
+        return _dbContext.Bookings.Where(x => x.UserId == id);
     }
 }

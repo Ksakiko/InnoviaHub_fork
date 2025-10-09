@@ -51,12 +51,13 @@ namespace backend.Controllers
         public async Task<ActionResult<BookingReadDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
         {
             // Tolka inkommande tider som UTC (frontend skickar ISO8601 med 'Z')
-var startUtc = dto.StartTime.Kind == DateTimeKind.Utc
-        ? dto.StartTime
-        : DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
-    var endUtc = dto.EndTime.Kind == DateTimeKind.Utc
-        ? dto.EndTime
-        : DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+            var startUtc = dto.StartTime.Kind == DateTimeKind.Utc
+            ? dto.StartTime
+            : DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+
+            var endUtc = dto.EndTime.Kind == DateTimeKind.Utc
+            ? dto.EndTime
+            : DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
 
             //Vallidera tid
             if (endUtc <= startUtc)

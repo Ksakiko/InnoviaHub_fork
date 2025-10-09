@@ -5,8 +5,12 @@ using backend.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using System.Net.Http.Headers;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+DotNetEnv.Env.Load();
 
 // Joel's ändringar för rätt userinfo - Azure AD Authentication för att få riktiga användar-ID och namn
 // Add Azure AD Authentication
@@ -28,6 +32,14 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddHttpClient("openai", client =>
+{
+   client.BaseAddress = new Uri("https://api.openai.com/v1/");
+   var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+   client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+   client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
 
 // För att använda inMemory-databas, sätt useInMemory till true
 var useInMemory = false;
@@ -49,7 +61,9 @@ else
 // Joel's ändringar för rätt userinfo - CORS för att tillåta frontend att anropa API
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
-      .WithOrigins("http://localhost:4200", "https://innoviahub-app-6hrgl.ondigitalocean.app")
+      .WithOrigins("http://localhost:4200"
+      // , "https://innoviahub-app-6hrgl.ondigitalocean.app"
+      )
       .AllowAnyHeader()
       .AllowAnyMethod()
       .AllowCredentials()
@@ -58,10 +72,14 @@ builder.Services.AddCors(opt => {
 
 builder.Services.AddSignalR();
 
-// Joel's ändringar för rätt userinfo - Dependency Injection för repositories
-//DI för repositories
+// DI for repositories
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+builder.Services.AddScoped<ChatGptService>();
+builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<ChatMessageService>();
 
 var app = builder.Build();
 

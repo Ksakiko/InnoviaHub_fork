@@ -7,4 +7,6 @@ public interface IResourceRepository
 {
     Task<List<Resource>> GetAll(CancellationToken ct = default);
     Task<Resource?> GetById(int id, CancellationToken ct = default);
+    Task<List<Resource>> GetAllByResourceIdAsync(int id);
+    Task<Resource?> GetResourceByNameAsync(string name);
 }

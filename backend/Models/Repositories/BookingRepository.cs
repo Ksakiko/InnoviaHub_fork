@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using backend.Hubs;
-using backend.Models.Entities;
 using backend.Models.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,6 +67,6 @@ public class BookingRepository : IBookingRepository
     
     public IEnumerable<Booking> GetBookingsByUserId(Guid id)
     {
-        return _dbContext.Bookings.Where(x => x.UserId == id);
+        return _dbContext.Bookings.Include(b => b.Resource).Where(x => x.UserId == id);
     }
 }

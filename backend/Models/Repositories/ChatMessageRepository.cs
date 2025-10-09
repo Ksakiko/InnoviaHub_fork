@@ -23,11 +23,11 @@ public class ChatMessageRepository : IChatMessageRepository
         var messages = _context.ChatMessages.Where(x => x.UserId == id);
         return messages;
     }
-    public IEnumerable<ChatMessage> GetBySessionId(long id)
-    {
-        var messages = _context.ChatMessages.Where(x => x.SessionId == id);
-        return messages;
-    }
+    // public IEnumerable<ChatMessage> GetBySessionId(long id)
+    // {
+    //     var messages = _context.ChatMessages.Where(x => x.SessionId == id);
+    //     return messages;
+    // }
     public async Task<ChatMessage> AddAsync(ChatMessage message)
     {
         await _context.ChatMessages.AddAsync(message);

@@ -1,8 +1,6 @@
-using System;
-using System.Security.Cryptography.X509Certificates;
-using backend.Models.Entities;
+using backend.Models;
 using backend.Models.Interfaces;
-using static backend.Services.ChatGptService;
+using static backend.Controllers.ChatController;
 
 namespace backend.Services;
 
@@ -10,51 +8,41 @@ public class BookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IResourceRepository _resourceRepository;
-    private readonly IResourceTypeRepository _resourceTypeRepository;
 
     public BookingService(
         IBookingRepository bookingRepository,
-        IResourceRepository resourceRepository,
-        IResourceTypeRepository resourceTypeRepository)
+        IResourceRepository resourceRepository
+        )
     {
         _bookingRepository = bookingRepository;
         _resourceRepository = resourceRepository;
-        _resourceTypeRepository = resourceTypeRepository;
     }
 
-    public async Task<List<Resource>> GetAvailableResources(ExtractedBookingRequest bookingRequest)
+    public async Task<string> HandleBooking(BookingInfoObj request)
     {
-        // Check if the requested resource matches any resource name in Resources (not resourceType)
-        var resources = await _resourceRepository.GetAll();
-        var specificResource = resources.FirstOrDefault(x => x.Name == bookingRequest.Resource);
+        var resource = await _resourceRepository.GetResourceByNameAsync(request.Resource);
 
-        // If user input matches one of the registered resource name, check availability
-        if (specificResource != null)
+        if (resource == null) return $"Resursen {request.Resource} hittades inde.";
+
+        var overlap = await _bookingRepository.HasOverlap(resource.Id, request.StartTime, request.EndTime);
+
+        if (overlap) return $"Tyvärr är resursen {request.Resource} nu upptagen från {request.StartTime} till {request.EndTime}";
+
+        var booking = new Booking
         {
-            var overlap = await _bookingRepository.HasOverlap(specificResource.Id, bookingRequest.StartTime, bookingRequest.EndTime);
+            UserId = request.UserId,
+            UserName = request.UserName,
+            ResourceId = resource.Id,
+            StartTime = request.StartTime,
+            EndTime = request.EndTime,
+            Status = request.Status
+        };
 
-            if (overlap) return [];
-            return [specificResource];
-        }
+        var confirmedBooking = await _bookingRepository.Add(booking);
 
-        // If user input did not specify any registered resource name,
-        // use the input as resource type and get all available resources
-        var resourceTypes = await _resourceTypeRepository.GetAllAsync();
+        if (confirmedBooking != null) return "";
 
-        var requestedResourceType = resourceTypes.FirstOrDefault(x => x.Name == bookingRequest.Resource);
-
-        if (requestedResourceType == null) return [];
-
-        var allResources = await _resourceRepository.GetAllByResourceIdAsync(requestedResourceType.Id);
-
-        var availableResources = new List<Resource>();
-
-        foreach (var r in allResources)
-        {
-            var overlap = await _bookingRepository.HasOverlap(r.Id, bookingRequest.StartTime, bookingRequest.EndTime);
-            if (!overlap) availableResources.Add(r);
-        }
-    
-        return availableResources;
+        return "Något gick fel. Vänligen försök igen.";
     }
+    
 }

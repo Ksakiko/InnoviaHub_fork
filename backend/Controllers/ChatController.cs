@@ -1,7 +1,5 @@
 using System.Text.Json;
 using backend.DTOs;
-using backend.Models.Entities;
-using backend.Models.Interfaces;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,21 +12,15 @@ namespace backend.Controllers
         private readonly ChatGptService _chatGptService;
         private readonly BookingService _bookingService;
         private readonly ChatMessageService _chatMessageService;
-        private readonly IChatMessageRepository _chatMessageRepository;
-        private readonly IBookingRepository _bookingRepository;
 
         public ChatController(
             ChatGptService chatGptService,
             BookingService bookingService,
-            ChatMessageService chatMessageService,
-            IChatMessageRepository chatMessageRepository,
-            IBookingRepository bookingRepository)
+            ChatMessageService chatMessageService)
         {
             _chatGptService = chatGptService;
             _bookingService = bookingService;
             _chatMessageService = chatMessageService;
-            _chatMessageRepository = chatMessageRepository;
-            _bookingRepository = bookingRepository;
         }
         public record BookingRequestObj(string Resource, DateTime StartTime, DateTime EndTime, Guid UserId, string UserName);
         public record BookingInfoObj(string Resource, DateTime StartTime, DateTime EndTime, Guid UserId, string UserName, string Status);
@@ -36,22 +28,21 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] ChatRequestDTO request)
         {
-            if (request == null) return Ok("Något gick fel. Försök igen.");
+            if (request == null) return Ok(new { response = "Det blev något fel. Kan du säga det en gång till?" });
 
+            // Store the user's message in database
             await _chatMessageService.StoreMessage(request.UserId, request.UserInput, "User");
 
-            // Analyze user's intent from user input
+            // Analyze the user's intent from user input
             var jsonString = await _chatGptService.AnalyzeUserIntent(request);
 
             var doc = JsonDocument.Parse(jsonString);
             var root = doc.RootElement;
+            
             var intent = root.GetProperty("intent").ToString();
             var userRequest = root.GetProperty("request").ToString();
 
-            System.Console.WriteLine("-----------------");
-            System.Console.WriteLine(intent);
-            System.Console.WriteLine("-----------------");
-
+            // Provide a reply based on the user's intent 
             switch (intent)
             {
                 case "initialize_booking":
@@ -59,12 +50,20 @@ namespace backend.Controllers
                     var replyOptions = await _chatGptService.ProvideOptions(request);
 
                     await _chatMessageService.StoreMessage(request.UserId, replyOptions, "AI");
-                    return Ok(replyOptions);
+                    return Ok(new { response = replyOptions });
 
                 case "confirm_booking":
+
                     BookingRequestObj? bookingRequestObj = JsonSerializer.Deserialize<BookingRequestObj>(userRequest);
 
                     var result = await _chatGptService.ConfirmBooking(bookingRequestObj, request.UserInput);
+
+                    if (result == null || result == "")
+                    {
+                        var confirmBookingErrorMessage = "Det blev något fel på min sida. Kan du säga det en gång till?";
+                        await _chatMessageService.StoreMessage(bookingRequestObj.UserId, confirmBookingErrorMessage, "AI");
+                        return Ok(new { response = confirmBookingErrorMessage });
+                    }
 
                     var resultDoc = JsonDocument.Parse(result);
                     var resultRoot = resultDoc.RootElement;
@@ -80,26 +79,28 @@ namespace backend.Controllers
                         if (errorMessage == "")
                         {
                             await _chatMessageService.StoreMessage(bookingRequestObj.UserId, reply, "AI");
-                            return Ok(reply);
+                            return Ok(new { response = reply });
                         }
 
                         await _chatMessageService.StoreMessage(bookingRequestObj.UserId, errorMessage, "AI");
-                        return Ok(errorMessage);
+                        return Ok(new { response = errorMessage });
                     }
 
                     await _chatMessageService.StoreMessage(bookingRequestObj.UserId, reply, "AI");
-                    return Ok(reply);
+                    return Ok( new { response = reply });
 
                 case "update_booking_info":
+
                     var replyUpdate = await _chatGptService.ProvideOptions(request);
 
                     await _chatMessageService.StoreMessage(request.UserId, replyUpdate, "AI");
-                    return Ok(replyUpdate);
+                    return Ok( new { response = replyUpdate });
 
                 default:
-                    var replyAskToClarify = "Jag förstod inte vad du menade. Skulle du kunna förtydliga det?";
+
+                    var replyAskToClarify = "Jag är inte säker på att jag förstod. Skulle du kunna förklara det lite tydligare?";
                     await _chatMessageService.StoreMessage(request.UserId, replyAskToClarify, "AI");
-                    return Ok(replyAskToClarify);
+                    return Ok( new { response = replyAskToClarify });
             }
         }
     }

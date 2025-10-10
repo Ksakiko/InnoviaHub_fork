@@ -22,11 +22,11 @@ public class BookingService
     {
         var resource = await _resourceRepository.GetResourceByNameAsync(request.Resource);
 
-        if (resource == null) return $"Resursen {request.Resource} hittades inde.";
+        if (resource == null) return $"Resursen '{request.Resource}' hittades inte.";
 
         var overlap = await _bookingRepository.HasOverlap(resource.Id, request.StartTime, request.EndTime);
 
-        if (overlap) return $"Tyvärr är resursen {request.Resource} nu upptagen från {request.StartTime} till {request.EndTime}";
+        if (overlap) return $"Tyvärr är resursen {request.Resource} upptagen från {request.StartTime} till {request.EndTime}";
 
         var booking = new Booking
         {
@@ -42,7 +42,7 @@ public class BookingService
 
         if (confirmedBooking != null) return "";
 
-        return "Något gick fel. Vänligen försök igen.";
+        return "Ett fel uppstod under bokningsprocessen. Vänligen försök igen.";
     }
     
 }

@@ -36,6 +36,10 @@
   color: var(--color-text-secondary, #666);
 }
 
+.chat {
+  margin-bottom: 2rem;
+}
+
 /* Filter knappar */
 .filter-buttons {
   display: flex;
@@ -190,7 +194,8 @@
 }
 
 /* Loading och error states */
-.loading, .error {
+.loading,
+.error {
   text-align: center;
   padding: 2rem;
   color: var(--color-text-secondary, #666);
@@ -271,11 +276,11 @@
   .bookings-section {
     grid-template-columns: 1fr;
   }
-  
+
   .filter-buttons {
     flex-direction: column;
   }
-  
+
   .user-info {
     flex-direction: column;
     text-align: center;

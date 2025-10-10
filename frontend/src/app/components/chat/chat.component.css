@@ -1,0 +1,142 @@
+.chat-container {
+  width: 100%;
+  background-color: var(--color-bg);
+  border-radius: 20px;
+}
+
+.chat__log {
+  border-radius: 20px;
+  background-color: var(--color-bg);
+  padding: 8px;
+}
+
+.chat__list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column-reverse;
+  height: 60vh;
+  overflow-y: auto;
+  gap: 8px;
+}
+
+.chat__item {
+  padding: 16px 22px;
+  width: fit-content;
+}
+
+.chat__item--ai {
+  border-radius: 30px 30px 30px 0;
+  background-color: var(--color-bg-alt);
+  align-self: flex-start;
+  white-space: pre-line;
+}
+
+.chat__item--user {
+  border-radius: 30px 30px 0 30px;
+  background-color: var(--color-highlight);
+  color: #fff;
+  align-self: flex-end;
+}
+
+.chat__form {
+  display: flex;
+  gap: 16px;
+  border: 1px solid var(--color-highlight);
+  border-radius: 30px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.chat__form-icon {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.chat__input {
+  width: 100%;
+  padding: 14px 0;
+  color: var(--color-text);
+}
+
+.chat__input::placeholder {
+  color: #f8bab3;
+}
+
+.chat__input:focus {
+  outline: none;
+}
+
+.chat__submit-button {
+  padding: 4px 8px 4px 0;
+}
+
+.chat__button-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat__submit-button:disabled .chat__button-bg {
+  background-color: #ffe0dc;
+}
+
+.loading {
+  display: flex;
+  gap: 8px;
+}
+
+.loading__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.loader {
+  width: 25px;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, #616161 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
+  animation: l3 2s infinite linear;
+}
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .chat__log {
+    padding: 1rem;
+  }
+
+  .chat__list {
+    padding: 1rem;
+    height: 350px;
+  }
+
+  .chat__item {
+    padding: 16px 28px;
+    max-width: 100%;
+  }
+}
+@media (min-width: 1024px) {
+  .chat__item {
+    max-width: 60%;
+  }
+}

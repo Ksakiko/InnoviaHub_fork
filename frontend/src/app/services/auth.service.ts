@@ -46,18 +46,18 @@ export class AuthService {
       if (!this._initialized) {
         await this.msalService.instance.initialize();
         this._initialized = true;
-        console.log('✅ MSAL initialized successfully');
+        // console.log('✅ MSAL initialized successfully');
       }
     } catch (error) {
-      console.error('❌ MSAL initialization failed:', error);
+      // console.error('❌ MSAL initialization failed:', error);
     }
   }
 
   async login(): Promise<void> {
-    console.log('🔐 Login method called');
+    // console.log('🔐 Login method called');
 
     if (!this.msalService) {
-      console.error('❌ MSAL Service is not available');
+      // console.error('❌ MSAL Service is not available');
       return;
     }
 
@@ -65,31 +65,31 @@ export class AuthService {
       // Ensure initialization before login
       await this.initializeMsal();
 
-      console.log('🚀 Attempting login popup...');
-      console.log('📋 Login request config:', loginRequest);
-      console.log('🌐 Environment config:', window.__env);
+      // console.log('🚀 Attempting login popup...');
+      // console.log('📋 Login request config:', loginRequest);
+      // console.log('🌐 Environment config:', window.__env);
 
       const result = await firstValueFrom(
         this.msalService.loginPopup(loginRequest)
       );
 
-      console.log('✅ Login successful', result);
+      // console.log('✅ Login successful', result);
       if (result?.account) {
         this.msalService.instance.setActiveAccount(result.account);
-        console.log('✅ Active account set:', result.account);
+        // console.log('✅ Active account set:', result.account);
       }
     } catch (error) {
-      console.error('❌ Login failed', error);
+      // console.error('❌ Login failed', error);
 
       // Försök med redirect som fallback
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
-        console.log('🔄 Popup blocked, trying redirect...');
+        // console.log('🔄 Popup blocked, trying redirect...');
         try {
           await firstValueFrom(this.msalService.loginRedirect(loginRequest));
         } catch (redirectError) {
-          console.error('❌ Redirect login also failed:', redirectError);
+          // console.error('❌ Redirect login also failed:', redirectError);
         }
       }
     }
@@ -116,7 +116,7 @@ export class AuthService {
       // Removed debug logging to prevent spam
       return accounts.length > 0;
     } catch (error) {
-      console.error('❌ Error checking login status:', error);
+      // console.error('❌ Error checking login status:', error);
       return false;
     }
   }
@@ -127,7 +127,7 @@ export class AuthService {
       // Removed debug logging to prevent spam
       return activeAccount;
     } catch (error) {
-      console.error('❌ Error getting active account:', error);
+      // console.error('❌ Error getting active account:', error);
       return null;
     }
   }

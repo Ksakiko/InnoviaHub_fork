@@ -7,8 +7,6 @@ using static backend.Controllers.ChatController;
 
 namespace backend.Services;
 
-
-
 public class ChatGptService
 {
     private readonly IHttpClientFactory _httpClientFactory;
@@ -29,79 +27,6 @@ public class ChatGptService
     }
 
     public record ExtractedBookingRequest(string Resource, DateTime? StartTime, DateTime? EndTime);
-
-    // public async Task<ExtractedBookingRequest?> ExtractUserBookingRequest(ChatRequestDTO request)
-    // {
-    //     var allMessages = await _chatMessageRepository.GetAllAsync();
-    //     var latestMessages = allMessages
-    //     .Where(x => x.UserId == request.UserId)
-    //     .OrderBy(x => x.CreatedAt)
-    //     .TakeLast(5)
-    //     .ToList();
-       
-    //     var today = DateTime.UtcNow;
-    //     var tomorrow = today.AddDays(1);
-
-    //     var http = _httpClientFactory.CreateClient("openai");
-
-    //     var body = new
-    //     {
-    //         model = "gpt-4.1",
-    //         input = new object[]
-    //         {
-    //             new {
-    //                 role = "system",
-    //                 content = $@"Extract resource name and start time from user input for a resource booking system.
-
-    //                     Extract booking info from user input and return JSON in this example format:
-    //                     {{
-    //                         ""Resource"": ""Example Resource"",
-    //                         ""StartTime"": ""yyyy-MM-ddT00:00:00.000Z"",
-    //                         ""EndTime"": ""yyyy-MM-ddT23:59:59.999Z"",
-    //                     }}
-
-    //                     - If the user says ""tomorrow"", interpret it as {tomorrow} for StartTime
-    //                     - If the user says ""next [day of the week]"", interprest it as upcoming day of the week.
-    //                         Examples:
-    //                             - If the user says next Thursday and {today} is Thursday, you should refer to next comming Thurday for the startTime.
-    //                             - If the user says next Friday and today is Tuesday, interpret it as not Friday that comes in 3 days but 10 days. 
-    //                     - The time section in startTime should always be ""00:00:00.000Z""
-    //                     - The time section in endTime should always be ""23:59:59.999Z""
-    //                     - If the user says ""skrivbord"" without number afterwards, convert it to ""Dropin-skrivbord""
-    //                     - If the user says ""vr"" or ""VR"" followed by a number, interpret it as ""VR-glasögon"" otherwise ""VR-headset""
-    //                     - If the user says, for example, ""ai"", interpret it as ""AI-server""
-    //                     - If the user says, for example, ""mötesrum 1"" and ""vr1"", convert them to ""Mötesrum 1"" and ""VR-glasögon 1"" for Resource in JSON
-    //                     - If the user input does not provide Resource for the JSON-format, refer to {latestMessages} and find Resource from messages that mentions ""boka"" or ""book"" 
-    //                     - If the user input does not provide StartTime or EndTime, apply the current date
-    //                     - Resource in JSON must always be capitalized
-    //                     ",
-    //             },
-    //             new {
-    //                 role = "user",
-    //                 content = request.UserInput
-    //             }
-    //         }
-    //     };
-
-    //     var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-
-    //     var response = await http.PostAsync("responses", content);
-
-    //     var raw = await response.Content.ReadAsStringAsync();
-
-    //     var doc = JsonDocument.Parse(raw);
-    //     var root = doc.RootElement;
- 
-    //     var jsonString = root.GetProperty("output")[0].GetProperty("content")[0].GetProperty("text").GetString();
-
-    //     if (jsonString == "" || jsonString == null) return null;
-
-    //     ExtractedBookingRequest? responseItem = JsonSerializer.Deserialize<ExtractedBookingRequest>(jsonString);
-
-    //     if (responseItem == null) return null;
-
-    //     return responseItem;
-    // }
 
     public async Task<string> AnalyzeUserIntent(ChatRequestDTO request)
     {
@@ -205,7 +130,9 @@ public class ChatGptService
         var today = DateTime.UtcNow;
         var tomorrow = today.AddDays(1);
 
-        var bookings = _bookingRepository.GetBookingsByUserId(request.UserId);
+        var allBookings = await _bookingRepository.GetAll();
+
+        var userBookings = _bookingRepository.GetBookingsByUserId(request.UserId);
 
         var resources = await _resourceRepository.GetAll();
 
@@ -221,7 +148,8 @@ public class ChatGptService
                     content = $@"You are a booking assistant to find a resource that the user can book based on the user input.
                         Resources: {JsonSerializer.Serialize(resources)}
                         Messages: {JsonSerializer.Serialize(latestMessages)}
-                        ConfirmedBookings: {JsonSerializer.Serialize(bookings)}
+                        ConfirmedUserBookings: {JsonSerializer.Serialize(userBookings)}
+                        ConfirmedAllBookings: {JsonSerializer.Serialize(allBookings)}
 
                         - If the user says ""tomorrow"", interpret it as {tomorrow} for StartTime
                         - If the user says ""next [day of the week]"", interprest it as upcoming day of the week.
@@ -230,7 +158,8 @@ public class ChatGptService
                                 - If the user says next Friday and today is Tuesday, it means the Friday that comes in 10 days. 
                                 - If the user says next Wednesday and today is Thursday, it means the Wednesday that comes in 6 days. 
                         - You do not need to mention to the user how you calculate the day of the week
-                        - Refer to ConfirmedBookings and check if the user has already booked the same resource for the same date and time
+                        - Refer to ConfirmedAllBookings and check if the requested resource is available 
+                        - Refer to ConfirmedUserBookings and check if the user has already booked the same resource for the same date and time
                         - If the user has already booked the same resource for the same date, ask the user if he or she wants to change the booking or start a new booking process
                         - If the user has not booked the same resource for the same date, you do not need to mention it 
                         - Find the exact resource that the user has requested and ask the user if he or she wants to book it
@@ -261,6 +190,8 @@ public class ChatGptService
 
         var jsonString = root.GetProperty("output")[0].GetProperty("content")[0].GetProperty("text").ToString();
 
+        if (jsonString == null || jsonString == "") return "Det blev något fel på min sida. Kan du säga det en gång till?";
+
         return jsonString;
     }
 
@@ -273,7 +204,6 @@ public class ChatGptService
         .OrderBy(x => x.CreatedAt)
         .TakeLast(10)
         .ToList();
-
 
         var http = _httpClientFactory.CreateClient("openai");
 

@@ -1,17 +1,22 @@
 <div class="page-container">
   <div class="page-container__inner">
-    
     <!-- Användarinfo sektion -->
     <div class="user-info">
       <div class="user-avatar">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          <path
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+          />
         </svg>
       </div>
       <div class="user-details">
         <h2>{{ userName }}</h2>
         <p>{{ userEmail }}</p>
       </div>
+    </div>
+
+    <div class="chat">
+      <app-chat></app-chat>
     </div>
 
     <!-- Filter knappar (likt din design) -->
@@ -21,9 +26,7 @@
     </div>
 
     <!-- Loading state -->
-    <div *ngIf="isLoading" class="loading">
-      Laddar dina bokningar...
-    </div>
+    <div *ngIf="isLoading" class="loading">Laddar dina bokningar...</div>
 
     <!-- Error state -->
     <div *ngIf="errorMessage" class="error">
@@ -32,20 +35,24 @@
 
     <!-- Bokningar sektion -->
     <div class="bookings-section" *ngIf="!isLoading && !errorMessage">
-      
       <!-- Bokningslista (vänster sida) -->
       <div class="bookings-list">
         <h3 *ngIf="bookings.length === 0">Inga bokningar hittades</h3>
-        
-        <div 
-          *ngFor="let booking of bookings" 
+
+        <div
+          *ngFor="let booking of bookings"
           class="booking-item"
           [class.selected]="selectedBooking?.id === booking.id"
           (click)="selectBooking(booking)"
         >
           <div class="booking-title">{{ booking.resourceName }}</div>
-          <div class="booking-date">{{ booking.startTime | date:'shortDate' }}</div>
-          <div class="booking-time">{{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}</div>
+          <div class="booking-date">
+            {{ booking.startTime | date : "shortDate" }}
+          </div>
+          <div class="booking-time">
+            {{ booking.startTime | date : "shortTime" }} -
+            {{ booking.endTime | date : "shortTime" }}
+          </div>
           <div class="booking-status">{{ booking.status }}</div>
         </div>
       </div>
@@ -54,58 +61,66 @@
       <div class="booking-details" *ngIf="selectedBooking">
         <div class="details-card">
           <h3>{{ selectedBooking.resourceName }}</h3>
-          
+
           <div class="detail-row">
             <strong>Tid:</strong>
-            <span>{{ selectedBooking.startTime | date:'shortTime' }} - {{ selectedBooking.endTime | date:'shortTime' }}</span>
+            <span
+              >{{ selectedBooking.startTime | date : "shortTime" }} -
+              {{ selectedBooking.endTime | date : "shortTime" }}</span
+            >
           </div>
-          
+
           <div class="detail-row">
             <strong>Datum:</strong>
-            <span>{{ selectedBooking.startTime | date:'longDate' }}</span>
+            <span>{{ selectedBooking.startTime | date : "longDate" }}</span>
           </div>
-          
+
           <div class="detail-row">
             <strong>Status:</strong>
             <span>{{ selectedBooking.status }}</span>
           </div>
-          
+
           <div class="detail-row">
             <strong>Bokad:</strong>
-            <span>{{ selectedBooking.createdAt | date:'short' }}</span>
+            <span>{{ selectedBooking.createdAt | date : "short" }}</span>
           </div>
 
           <!-- Joel's ändringar för rätt userinfo - Redigering och radering UI -->
           <div class="detail-actions" *ngIf="!isEditing">
-            <button class="btn btn-secondary" (click)="startEdit()">Ändra</button>
-            <button class="btn btn-danger" (click)="deleteBooking()">Radera</button>
+            <button class="btn btn-secondary" (click)="startEdit()">
+              Ändra
+            </button>
+            <button class="btn btn-danger" (click)="deleteBooking()">
+              Radera
+            </button>
           </div>
 
           <!-- Redigeringsformulär -->
           <div class="edit-form" *ngIf="isEditing">
             <h4>Redigera bokning</h4>
-            
+
             <div class="form-group">
               <label for="bookingDate">Datum:</label>
-              <input 
-                type="date" 
+              <input
+                type="date"
                 id="bookingDate"
                 [(ngModel)]="editForm.bookingDate"
                 [min]="minDate"
                 class="form-control"
               />
             </div>
-            
+
             <div class="form-group">
               <label>Tid (bevaras):</label>
               <div class="preserved-time">
-                {{ editForm.originalStartTime | date:'shortTime' }} - {{ editForm.originalEndTime | date:'shortTime' }}
+                {{ editForm.originalStartTime | date : "shortTime" }} -
+                {{ editForm.originalEndTime | date : "shortTime" }}
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="status">Status:</label>
-              <select 
+              <select
                 id="status"
                 [(ngModel)]="editForm.status"
                 class="form-control"
@@ -115,15 +130,18 @@
                 <option value="Cancelled">Avbokad</option>
               </select>
             </div>
-            
+
             <div class="edit-actions">
-              <button class="btn btn-primary" (click)="saveEdit()">Spara</button>
-              <button class="btn btn-secondary" (click)="cancelEdit()">Avbryt</button>
+              <button class="btn btn-primary" (click)="saveEdit()">
+                Spara
+              </button>
+              <button class="btn btn-secondary" (click)="cancelEdit()">
+                Avbryt
+              </button>
             </div>
           </div>
         </div>
       </div>
-      
     </div>
   </div>
 </div>

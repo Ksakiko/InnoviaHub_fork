@@ -111,7 +111,7 @@ Om något inte fungerar:
 4. Pusha: `git push origin min-nya-feature`
 5. Skapa en Pull Request
 
-## AI-integration
+## AI-integration (Individuellt arbete)
 
 På profilsidan finns ett chattfält för att boka resurser med hjälp av AI (OpenAIs API, GPT-4.1).
 

@@ -111,6 +111,18 @@ Om något inte fungerar:
 4. Pusha: `git push origin min-nya-feature`
 5. Skapa en Pull Request
 
+## AI-integration
+
+På profilsidan finns ett chattfält för att boka resurser med hjälp av AI (OpenAIs API, GPT-4.1).
+
+Användarens inmatning skickas till backenden för att hanteras av API:et. Sedan returneras data från GPT-4.1 till frontenden som AI:s svar.
+
+Följande funktioner är tillgängliga i chatten:
+
+- Boka en resurs på ett specifikt datum
+- Få information om tillgängliga resurser baserat på ett specifikt datum
+- Ändra resurs eller datum under bokningsprocessen
+
 ---
 
 **Skapad av InnoviaHub-teamet** 🚀

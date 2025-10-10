@@ -46,7 +46,7 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
    cd InnoviaHub
    ```
 
-2. **Skapa .env-fil i ```backend```-mappen**
+2. **Skapa en ```.env```-fil i ```backend```-mappen**
 
    Lägg till följande med en giltig API-nyckel från OpenAI i filen
    

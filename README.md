@@ -27,10 +27,6 @@ InnoviaHub är en webbapplikation där användare kan:
 
 ## Kom igång
 
-### Snabbstart
-
-Om du inte vill installera applikationen själv finns produktionsmiljön tillgänglig på https://innoviahub-app-6hrgl.ondigitalocean.app/.
-
 ### Entra ID
 
 För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöver du bli tillagd i Innovia Hubs Entra ID-katalog. Kontakta någon i teamet för att bli tillagd.
@@ -50,7 +46,15 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
    cd InnoviaHub
    ```
 
-2. **Starta backend (API):**
+2. **Skapa en ```.env```-fil i ```backend```-mappen**
+
+   Lägg till följande med en giltig API-nyckel från OpenAI i filen
+   
+   ```bash
+   OPENAI_API_KEY="API KEY FROM OPENAI"
+   ```
+
+3. **Starta backend (API):**
 
    ```bash
    cd backend
@@ -59,7 +63,7 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 
    Servern startar på: <http://localhost:5184>
 
-3. **Starta frontend (webbsida):**
+4. **Starta frontend (webbsida):**
 
    ```bash
    cd frontend

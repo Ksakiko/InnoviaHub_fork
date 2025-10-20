@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { NavTabsComponent } from '../../components/nav-tabs/nav-tabs.component';
 import { BookingPaneComponent } from '../../components/booking-pane/booking-pane.component';
 import { ResourcesPaneComponent } from '../../components/resources-pane/resources-pane.component';
+import { SensorPaneComponent } from '../../components/sensor-pane/sensor-pane.component';
 
 @Component({
   selector: 'app-admin-page',
@@ -10,6 +11,7 @@ import { ResourcesPaneComponent } from '../../components/resources-pane/resource
     ResourcesPaneComponent,
     BookingPaneComponent,
     ResourcesPaneComponent,
+    SensorPaneComponent,
   ],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.css',

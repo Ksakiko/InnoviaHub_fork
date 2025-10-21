@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfigService } from '../core/app-config.service';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Devices } from '../../types/iot-types';
+import { Device } from '../../types/iot-types';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class IotService {
     this.url = `${this.cfg.iotApiUrl}/api/tenants/${this.tenantId}/devices`;
   }
 
-  getAllDevices(): Observable<Devices[]> {
+  getAllDevices(): Observable<Device[]> {
     const httpOptions = {
       Headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export class IotService {
       observe: 'response' as const,
     };
 
-    return this.http.get<Devices[]>(this.url).pipe(
+    return this.http.get<Device[]>(this.url).pipe(
       catchError((error) => {
         return throwError(() => error);
       })

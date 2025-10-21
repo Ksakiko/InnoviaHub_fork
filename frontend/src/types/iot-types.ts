@@ -1,4 +1,4 @@
-export type Devices = {
+export type Device = {
   id: string;
   tenantId: string;
   roomId: string;
@@ -28,4 +28,24 @@ export type DeviceWithRealtimeData = {
   co2?: number;
   co2Unit?: string;
   co2Time?: string;
+};
+
+export type RealtimeAlert = {
+  tenantId: string;
+  tenantSlug: string;
+  deviceId: string;
+  type: string;
+  value: number;
+  time: string;
+  ruleId: string;
+  severity: string;
+  message: string;
+};
+
+export type Alert = {
+  deviceName: string;
+  type: string;
+  time: string;
+  severity: string;
+  message: string;
 };

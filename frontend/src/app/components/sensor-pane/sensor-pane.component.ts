@@ -1,9 +1,12 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { IotService } from '../../services/iot.service';
 import { AuthService } from '../../services/auth.service';
 import {
-  Devices,
+  Alert,
+  Device,
   DeviceWithRealtimeData,
+  RealtimeAlert,
   RealtimeData,
 } from '../../../types/iot-types';
 import { TelemetryHubService } from '../../services/telemetry-hub.service';
@@ -16,13 +19,15 @@ import { TelemetryHubService } from '../../services/telemetry-hub.service';
 })
 export class SensorPaneComponent implements OnInit {
   tenantSlug = 'innovia';
-  devices = signal<Devices[]>([]);
+  devices = signal<Device[]>([]);
   devicesWithRealtimeData = signal<DeviceWithRealtimeData[]>([]);
+  // alerts = signal<Alert[]>([]);
+  alert = signal<Alert | null>(null);
 
   private iotService = inject(IotService);
   private authService = inject(AuthService);
   private telemetryHubService = inject(TelemetryHubService);
-  index: any;
+  private toastr = inject(ToastrService);
 
   async ngOnInit(): Promise<void> {
     if (!this.authService.isAdmin()) return console.error('Unauthorized');
@@ -41,6 +46,32 @@ export class SensorPaneComponent implements OnInit {
         ?.on('measurementReceived', (data: RealtimeData) => {
           this.handleRealtimeData(data);
         });
+
+      this.telemetryHubService
+        .useConnection()
+        ?.on('alertRaised', (data: RealtimeAlert) => {
+          // console.log('Alert: ', data);
+
+          const device = this.devices().find((d) => d.id === data.deviceId);
+
+          const newAlert: Alert = {
+            deviceName: device ? device.serial : data.deviceId,
+            type: data.type,
+            time: data.time,
+            severity: data.severity,
+            message: data.message,
+          };
+
+          this.alert.set(newAlert);
+
+          this.runToast();
+
+          // const existingAlert = this.alerts().find(
+          //   (a) => a.ruleId === data.ruleId
+          // );
+
+          // this.alerts.update((prev) => [...prev, data]);
+        });
     });
   }
 
@@ -50,7 +81,7 @@ export class SensorPaneComponent implements OnInit {
     this.iotService.getAllDevices().subscribe({
       next: (data) => {
         data.forEach((x) => {
-          const newDevice: Devices = {
+          const newDevice: Device = {
             id: x.id,
             tenantId: x.tenantId,
             roomId: x.roomId,
@@ -117,5 +148,17 @@ export class SensorPaneComponent implements OnInit {
         ...prev.slice(index + 1),
       ]);
     }
+  }
+
+  runToast() {
+    this.toastr.warning(
+      `${this.alert()?.message}`,
+      `${this.alert()?.severity.toUpperCase()} - ${
+        this.alert()?.deviceName
+      } (${this.alert()?.type.toUpperCase()})`,
+      {
+        timeOut: 7000,
+      }
+    );
   }
 }

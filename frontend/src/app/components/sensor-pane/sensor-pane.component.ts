@@ -21,7 +21,6 @@ export class SensorPaneComponent implements OnInit {
   tenantSlug = 'innovia';
   devices = signal<Device[]>([]);
   devicesWithRealtimeData = signal<DeviceWithRealtimeData[]>([]);
-  // alerts = signal<Alert[]>([]);
   alert = signal<Alert | null>(null);
 
   private iotService = inject(IotService);
@@ -47,30 +46,11 @@ export class SensorPaneComponent implements OnInit {
           this.handleRealtimeData(data);
         });
 
+      // Get realtime alert data, store it, and print it out as alert toast in UI
       this.telemetryHubService
         .useConnection()
         ?.on('alertRaised', (data: RealtimeAlert) => {
-          // console.log('Alert: ', data);
-
-          const device = this.devices().find((d) => d.id === data.deviceId);
-
-          const newAlert: Alert = {
-            deviceName: device ? device.serial : data.deviceId,
-            type: data.type,
-            time: data.time,
-            severity: data.severity,
-            message: data.message,
-          };
-
-          this.alert.set(newAlert);
-
-          this.runToast();
-
-          // const existingAlert = this.alerts().find(
-          //   (a) => a.ruleId === data.ruleId
-          // );
-
-          // this.alerts.update((prev) => [...prev, data]);
+          this.handleAlertData(data);
         });
     });
   }
@@ -150,15 +130,51 @@ export class SensorPaneComponent implements OnInit {
     }
   }
 
+  handleAlertData(data: RealtimeAlert) {
+    // Get the corresponding device info for the real-time data
+    const device = this.devices().find((d) => d.id === data.deviceId);
+
+    const newAlert: Alert = {
+      deviceName: device ? device.serial : data.deviceId,
+      type: data.type,
+      time: data.time,
+      severity: data.severity,
+      message: data.message,
+    };
+
+    this.alert.set(newAlert);
+
+    this.runToast();
+  }
+
   runToast() {
-    this.toastr.warning(
-      `${this.alert()?.message}`,
-      `${this.alert()?.severity.toUpperCase()} - ${
-        this.alert()?.deviceName
-      } (${this.alert()?.type.toUpperCase()})`,
-      {
-        timeOut: 7000,
-      }
-    );
+    if (this.alert()?.severity === 'warning') {
+      this.toastr.warning(
+        // Alert message
+        `${this.alert()?.message}`,
+        // Alert toast title - e.g. "WARNING - dev-101 (CO2)"
+        `${this.alert()?.severity.toUpperCase()} - ${
+          this.alert()?.deviceName
+        } (${this.alert()?.type.toUpperCase()})`,
+        {
+          // Display time
+          timeOut: 7000,
+        }
+      );
+    } else {
+      this.toastr.info(
+        // Alert message
+        `${this.alert()?.message}`,
+        // Alert toast title - e.g. "WARNING - dev-101 (CO2)"
+        `Alert - ${
+          this.alert()?.deviceName
+        } (${this.alert()?.type.toUpperCase()})`,
+        {
+          // Display time
+          timeOut: 7000,
+        }
+      );
+    }
+    // Other specific cases for different severities can be added later
   }
 }

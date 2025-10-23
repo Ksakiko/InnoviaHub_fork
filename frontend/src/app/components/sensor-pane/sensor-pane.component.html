@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="sensor-list__temperature">
-        <div class="sensor-list__temperatur-value">
+        <div class="sensor-list__temperature-value">
           <figure class="temperature__icon">
             <svg
               width="800px"
@@ -52,12 +52,20 @@
               </g>
             </svg>
           </figure>
-          <div class="temperatur__value">
+          <!-- <div class="temperature__value"> -->
+          <div
+            [class]="
+              alert()?.deviceName === device.serial &&
+              alert()?.type === 'temperature'
+                ? 'temperature__value temperature__value--alert'
+                : 'temperature__value'
+            "
+          >
             {{ device.temperature ? device.temperature : "ej tillgänglig" }}
             {{ device.temperature && device.temperatureUnit }}
           </div>
         </div>
-        <div class="sensor-list__temperatur-time">
+        <div class="sensor-list__temperature-time">
           <figure class="time__icon">
             <svg
               width="800px"
@@ -75,9 +83,11 @@
               />
             </svg>
           </figure>
-          {{
-            device.temperatureTime ? device.temperatureTime : "ej tillgänglig"
-          }}
+          <div class="time__value">
+            {{
+              device.temperatureTime ? device.temperatureTime : "ej tillgänglig"
+            }}
+          </div>
         </div>
       </div>
       <div class="sensor-list__co2">
@@ -151,8 +161,17 @@
               </g>
             </svg>
           </figure>
-          {{ device.co2 ? device.co2 : "ej tillgänglig" }}
-          {{ device.co2 && device.co2Unit }}
+          <!-- <div class="co2__value"> -->
+          <div
+            [class]="
+              alert()?.deviceName === device.serial && alert()?.type === 'co2'
+                ? 'co2__value co2__value--alert'
+                : 'co2__value'
+            "
+          >
+            {{ device.co2 ? device.co2 : "ej tillgänglig" }}
+            {{ device.co2 && device.co2Unit }}
+          </div>
         </div>
         <div class="sensor-list__co2-time">
           <figure class="time__icon">
@@ -172,7 +191,9 @@
               />
             </svg>
           </figure>
-          {{ device.co2Time ? device.co2Time : "ej tillgänglig" }}
+          <div class="time__value">
+            {{ device.co2Time ? device.co2Time : "ej tillgänglig" }}
+          </div>
         </div>
       </div>
     </li>

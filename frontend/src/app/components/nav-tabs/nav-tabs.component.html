@@ -1,14 +1,14 @@
 <!-- MENY -->
 <nav aria-label="Admin-sektioner" class="mb-5">
   <!-- Desktop: PILLS -->
-  <div class="hidden md:flex flex-wrap">
+  <div class="hidden md:flex flex-wrap gap-0.5">
     <button
       *ngFor="let t of tabs; let i = index; let last = last"
       type="button"
       role="tab"
       [attr.aria-selected]="t.id === activeId"
       (click)="changeTab.emit(t.id)"
-      class="inline-flex items-center gap-1 px-4 py-4 mx-1 transition border bg-highlight text-[#993f3b]"
+      class="inline-flex items-center gap-1 px-4 py-4 transition border bg-highlight text-[#993f3b]"
       [ngClass]="{
         'rounded-l-[30px] rounded-r-[6px] border-highlight mx-1 hover:bg-highlight/70':
           i === 0 && t.id !== activeId,

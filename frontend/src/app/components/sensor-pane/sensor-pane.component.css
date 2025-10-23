@@ -13,7 +13,9 @@
   border: 1px solid var(--color-highlight);
   border-radius: 10px;
   padding: 1rem;
-  width: 300px;
+  min-width: 300px;
+  max-width: 350px;
+  width: 100%;
 }
 
 .sensor-list__device-info {
@@ -67,13 +69,31 @@
   width: 28px;
 }
 
-.temperature__value {
+.temperature__value,
+.co2__value {
+  font-size: 1.5rem;
+  position: relative;
 }
 
-.sensor-list__temperatur-value,
-.sensor-list__temperatur-time,
+.temperature__value--alert::before,
+.co2__value--alert::before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: -15%;
+  top: 60%;
+  z-index: -1;
+  background-color: #ffdaa7;
+}
+
+.sensor-list__temperature-value,
+.sensor-list__temperature-time,
 .sensor-list__co2-value,
 .sensor-list__co2-time {
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
   gap: 10px;
 }

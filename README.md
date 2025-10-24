@@ -46,10 +46,10 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
    cd InnoviaHub
    ```
 
-2. **Skapa en ```.env```-fil i ```backend```-mappen**
+2. **Skapa en `.env`-fil i `backend`-mappen**
 
    Lägg till följande med en giltig API-nyckel från OpenAI i filen
-   
+
    ```bash
    OPENAI_API_KEY="API KEY FROM OPENAI"
    ```
@@ -114,6 +114,21 @@ Om något inte fungerar:
 3. Committa: `git commit -m "Lägg till min nya feature"`
 4. Pusha: `git push origin min-nya-feature`
 5. Skapa en Pull Request
+
+## IoT-integration med [forkat repo](https://github.com/Ksakiko/innovia-iot) (Individuellt arbete)
+
+På adminsidan har ett sensortelemetri-system implementerats (under fliken "Alla sensorer") med [ett API](https://github.com/Ksakiko/innovia-iot) som genererar påhittade mätvärden för demonstrationssyfte. Nuvarande tillgängliga mätvärden är:
+
+- Temperatur
+- CO₂
+
+### SignalR
+
+För att åstadkomma överföring av realtidsdata används **SignalR**. När användare besöker sidan "Alla sensorer" så startas SignalR-koppling och stängs av när användare lämnar sektionen.
+
+### ngx-toastr
+
+När SignalR är igång skickas alert-data från API:et för överskridna mätvärden baserat på registrerade regler för varje sensorenhet, och visas som aviseringar. Alert-aviseringar i användargränssnittet är implementerade med hjälp av npm-paketet **ngx-toastr**.
 
 ## AI-integration (Individuellt arbete)
 

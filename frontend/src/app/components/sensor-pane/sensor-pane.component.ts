@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { IotService } from '../../services/iot.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,7 +17,7 @@ import { TelemetryHubService } from '../../services/telemetry-hub.service';
   templateUrl: './sensor-pane.component.html',
   styleUrl: './sensor-pane.component.css',
 })
-export class SensorPaneComponent implements OnInit {
+export class SensorPaneComponent implements OnInit, OnDestroy {
   tenantSlug = 'innovia';
   devices = signal<Device[]>([]);
   devicesWithRealtimeData = signal<DeviceWithRealtimeData[]>([]);
@@ -53,6 +53,10 @@ export class SensorPaneComponent implements OnInit {
           this.handleAlertData(data);
         });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.telemetryHubService.stop();
   }
 
   getAllDevices() {

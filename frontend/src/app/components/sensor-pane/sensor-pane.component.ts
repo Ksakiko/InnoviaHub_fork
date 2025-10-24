@@ -56,7 +56,8 @@ export class SensorPaneComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.telemetryHubService.stop();
+    this.telemetryHubService.useConnection()?.off('measurementReceived');
+    this.telemetryHubService.useConnection()?.off('alertRaised');
   }
 
   getAllDevices() {

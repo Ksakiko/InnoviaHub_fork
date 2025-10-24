@@ -33,14 +33,6 @@ export class TelemetryHubService {
     return this.connection;
   }
 
-  stop() {
-    if (!this.connection) return;
-    this.connection
-      .stop()
-      .then(() => console.log('SignalR disconnected'))
-      .catch((err) => console.error('Failed to disconnect SignalR: ', err));
-  }
-
   async registerTenantSlug(tenantSlug: string): Promise<any> {
     await this.connection
       ?.invoke('JoinTenant', tenantSlug)

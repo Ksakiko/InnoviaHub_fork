@@ -40,6 +40,7 @@ import {
   MAT_DATE_LOCALE,
   NativeDateAdapter,
 } from '@angular/material/core';
+import { provideToastr } from 'ngx-toastr';
 
 export class MondayFirstDateAdapter extends NativeDateAdapter {
   override getFirstDayOfWeek(): number {
@@ -83,6 +84,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
+    provideToastr(),
     { provide: MAT_DATE_LOCALE, useValue: 'sv-SE' },
     {
       provide: DateAdapter,

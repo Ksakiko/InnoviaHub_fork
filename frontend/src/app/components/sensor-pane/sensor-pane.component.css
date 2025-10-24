@@ -1,0 +1,99 @@
+.sensor-pane__selections {
+  margin-bottom: 1.5rem;
+}
+
+.sensor-list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sensor-list__item {
+  border: 1px solid var(--color-highlight);
+  border-radius: 10px;
+  padding: 1rem;
+  min-width: 300px;
+  max-width: 350px;
+  width: 100%;
+}
+
+.sensor-list__device-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sensor-list__device-serial {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sensor-list__device-model {
+  font-style: italic;
+}
+
+.sensor-list__temperature {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 2rem;
+}
+
+.sensor-list__co2 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.temperature__icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.time__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.co2__icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.temperature__icon,
+.time__icon,
+.co2__icon {
+  width: 28px;
+}
+
+.temperature__value,
+.co2__value {
+  font-size: 1.5rem;
+  position: relative;
+}
+
+.temperature__value--alert::before,
+.co2__value--alert::before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: -15%;
+  top: 60%;
+  z-index: -1;
+  background-color: #ffdaa7;
+}
+
+.sensor-list__temperature-value,
+.sensor-list__temperature-time,
+.sensor-list__co2-value,
+.sensor-list__co2-time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}

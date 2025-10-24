@@ -7,7 +7,8 @@
     ></app-nav-tabs>
 
     @switch (active()) { @case ('bookings') {<app-booking-pane
-    ></app-booking-pane> } @case ('sensors') {} @case ('resources') {
+    ></app-booking-pane> } @case ('sensors') {<app-sensor-pane
+    ></app-sensor-pane>} @case ('resources') {
     <app-resources-pane></app-resources-pane> } }
   </div>
 </div>

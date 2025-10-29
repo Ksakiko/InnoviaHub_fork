@@ -30,7 +30,7 @@ export class ProfilePageComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
 
-  // Joel's ändringar för rätt userinfo - Editing funktionalitet
+  // Editing funktionalitet
   isEditing = false;
   editForm: any = {
     bookingDate: '',
@@ -40,7 +40,7 @@ export class ProfilePageComponent implements OnInit {
     originalEndTime: '',
   };
 
-  // Joel's ändringar - Inaktivera tidigare datum på kalendern
+  // Inaktivera tidigare datum på kalendern
   minDate = '';
 
   // Cache user data to avoid repeated AuthService calls
@@ -113,7 +113,7 @@ export class ProfilePageComponent implements OnInit {
     this.isEditing = false; // Reset editing mode when selecting different booking
   }
 
-  // Joel's ändringar för rätt userinfo - Redigeringsfunktionalitet
+  // Redigeringsfunktionalitet
   startEdit() {
     if (!this.selectedBooking) return;
 
@@ -123,7 +123,7 @@ export class ProfilePageComponent implements OnInit {
     // Populate edit form with current booking data
     const startDate = new Date(this.selectedBooking.startTime);
 
-    // Joel's ändringar - Sätt minsta datum till idag för att förhindra tidigare datum
+    // Sätt minsta datum till idag för att förhindra tidigare datum
     const today = new Date();
     this.minDate = this.formatDateOnly(today);
 
@@ -163,7 +163,7 @@ export class ProfilePageComponent implements OnInit {
       return;
     }
 
-    // Joel's ändringar - Validering av datum och tid
+    // Validering av datum och tid
     const startTime = new Date(this.editForm.startTime);
     const endTime = new Date(this.editForm.endTime);
     const now = new Date();
@@ -179,18 +179,18 @@ export class ProfilePageComponent implements OnInit {
     }
 
     try {
-      // Joel's ändringar - Debug information
+      // Debug information
       console.log('🔍 EditForm data:', this.editForm);
       console.log('🔍 Selected booking:', this.selectedBooking);
 
-      // Joel's ändringar - Kombinera nytt datum med bevarade tider
+      // Kombinera nytt datum med bevarade tider
       const originalStartTime = new Date(this.editForm.originalStartTime);
       const originalEndTime = new Date(this.editForm.originalEndTime);
 
       console.log('🔍 Original times:', { originalStartTime, originalEndTime });
       console.log('🔍 Booking date string:', this.editForm.bookingDate);
 
-      // Joel's fix - Skapa datum från bookingDate-strängen och sätt rätt tid
+      // Skapa datum från bookingDate-strängen och sätt rätt tid
       const dateParts = this.editForm.bookingDate.split('-');
       const year = parseInt(dateParts[0]);
       const month = parseInt(dateParts[1]) - 1; // JavaScript månader är 0-indexerade
@@ -207,7 +207,7 @@ export class ProfilePageComponent implements OnInit {
         originalStartTime.getMilliseconds()
       );
 
-      // Joel's fix - Beräkna dagsskillnad korrekt
+      // Beräkna dagsskillnad korrekt
       // Kontrollera om sluttiden är nästa dag genom att jämföra datum-delen
       const startDateOnly = new Date(
         originalStartTime.getFullYear(),
@@ -312,7 +312,7 @@ export class ProfilePageComponent implements OnInit {
     }
   }
 
-  // Joel's ändringar - Hantera starttidsändring för att uppdatera sluttid minimum
+  // Hantera starttidsändring för att uppdatera sluttid minimum
   onStartTimeChange() {
     if (this.editForm.startTime && this.editForm.endTime) {
       const startTime = new Date(this.editForm.startTime);
@@ -337,7 +337,7 @@ export class ProfilePageComponent implements OnInit {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
-  // Joel's ändringar - Helper metod för endast datum formatering
+  // Helper metod för endast datum formatering
   private formatDateOnly(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');

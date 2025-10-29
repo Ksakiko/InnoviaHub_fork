@@ -37,7 +37,7 @@ export class AuthService {
         takeUntil(this._destroying$)
       )
       .subscribe((result: any) => {
-        console.log('Login successful:', result);
+        // console.log('Login successful:', result);
       });
   }
 

@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
-// Joel's ändringar för rätt userinfo - Azure AD Authentication för att få riktiga användar-ID och namn
+// Azure AD Authentication för att få riktiga användar-ID och namn
 // Add Azure AD Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
@@ -58,7 +58,7 @@ else
       );
 }
 
-// Joel's ändringar för rätt userinfo - CORS för att tillåta frontend att anropa API
+// CORS för att tillåta frontend att anropa API
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
       .WithOrigins("http://localhost:4200"
@@ -84,7 +84,7 @@ builder.Services.AddScoped<ChatMessageService>();
 var app = builder.Build();
 
 
-// Joel's ändringar för rätt userinfo - CORS måste aktiveras före andra middleware
+// CORS måste aktiveras före andra middleware
 app.UseCors("ng");
 
 // Configure the HTTP request pipeline.
@@ -93,13 +93,13 @@ if (app.Environment.IsDevelopment())
    app.MapOpenApi();
 }
 
-// Joel's ändringar för rätt userinfo - Authentication och Authorization middleware för Azure AD
+// Authentication och Authorization middleware för Azure AD
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-// Joel's ändringar för rätt userinfo - SignalR hub för realtidsuppdateringar av bokningar
+// SignalR hub för realtidsuppdateringar av bokningar
 app.MapHub<BookingHub>("/hubs/bookings");
 
 app.Run();

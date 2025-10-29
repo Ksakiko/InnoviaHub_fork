@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "prestart": "node scripts/generate-env.js",
-    "start": "ng serve",
+    "start": "npx http-server dist/frontend/browser -p 8080",
     "prebuild": "node scripts/generate-env.js",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",

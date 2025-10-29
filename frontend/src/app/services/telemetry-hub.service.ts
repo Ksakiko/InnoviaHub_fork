@@ -23,9 +23,10 @@ export class TelemetryHubService {
       .build();
     try {
       await this.connection.start();
-      console.log('SignalR connected.');
+      // console.log('SignalR connected.');
     } catch (err) {
-      console.log('Error establishing SignalR connection: ' + err);
+      // console.log('Error establishing SignalR connection: ' + err);
+      throw Error;
     }
   }
 

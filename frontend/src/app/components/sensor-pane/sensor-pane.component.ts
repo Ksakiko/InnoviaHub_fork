@@ -22,6 +22,7 @@ export class SensorPaneComponent implements OnInit, OnDestroy {
   devices = signal<Device[]>([]);
   devicesWithRealtimeData = signal<DeviceWithRealtimeData[]>([]);
   alert = signal<Alert | null>(null);
+  errorMessage = signal<string>('');
 
   private iotService = inject(IotService);
   private authService = inject(AuthService);
@@ -35,24 +36,43 @@ export class SensorPaneComponent implements OnInit, OnDestroy {
     this.getAllDevices();
 
     // Start SignalR
-    this.telemetryHubService.start().then(async () => {
-      // Register tenalnt slug
-      await this.telemetryHubService.registerTenantSlug(this.tenantSlug);
+    this.telemetryHubService
+      .start()
+      .then(async () => {
+        // Register tenalnt slug
+        await this.telemetryHubService.registerTenantSlug(this.tenantSlug);
 
-      // Get realtime data and store it in devicesWithRealtimeData
-      this.telemetryHubService
-        .useConnection()
-        ?.on('measurementReceived', (data: RealtimeData) => {
-          this.handleRealtimeData(data);
-        });
+        let dataReceived = false;
 
-      // Get realtime alert data, store it, and print it out as alert toast in UI
-      this.telemetryHubService
-        .useConnection()
-        ?.on('alertRaised', (data: RealtimeAlert) => {
-          this.handleAlertData(data);
-        });
-    });
+        // Get realtime data and store it in devicesWithRealtimeData
+        this.telemetryHubService
+          .useConnection()
+          ?.on('measurementReceived', (data: RealtimeData) => {
+            dataReceived = true;
+            this.handleRealtimeData(data);
+          });
+
+        // Set error message if the real-time data is not comming in within 15 seconds
+        setTimeout(() => {
+          if (!dataReceived) {
+            this.errorMessage.set(
+              'Ingen realtidsdata finns tillgänglig just nu. Försök igen om en stund.'
+            );
+          }
+        }, 15000);
+
+        // Get realtime alert data, store it, and print it out as alert toast in UI
+        this.telemetryHubService
+          .useConnection()
+          ?.on('alertRaised', (data: RealtimeAlert) => {
+            this.handleAlertData(data);
+          });
+      })
+      .catch(() => {
+        this.errorMessage.set(
+          'Anslutning till realtidsdata är för närvarande inte tillgänglig. Försök igen om en stund.'
+        );
+      });
   }
 
   ngOnDestroy(): void {
@@ -62,7 +82,6 @@ export class SensorPaneComponent implements OnInit, OnDestroy {
 
   getAllDevices() {
     if (!this.authService.isAdmin()) return console.error('Unauthorized');
-
     this.iotService.getAllDevices().subscribe({
       next: (data) => {
         data.forEach((x) => {
@@ -82,17 +101,19 @@ export class SensorPaneComponent implements OnInit, OnDestroy {
           }
         });
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
+        this.errorMessage.set(
+          'Enhetsdata är för närvarande inte tillgänglig. Försök igen om en stund.'
+        );
       },
-      complete: () => {},
     });
   }
 
   handleRealtimeData(data: RealtimeData) {
     const device = this.devices().find((d) => d.id === data.deviceId);
 
-    if (!device) return;
+    if (!device)
+      return this.errorMessage.set('Något gick fel. Försök igen om en stund.');
 
     // Round up to two decimal places if data type is temperature
     const dataValue =

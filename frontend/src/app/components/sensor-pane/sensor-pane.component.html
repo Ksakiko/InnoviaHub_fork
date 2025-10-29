@@ -1,6 +1,10 @@
 <div>
   <!-- Loading -->
-  @if (devicesWithRealtimeData().length < 1) {
+  @if (errorMessage()) {
+  <div class="text-m text-heading/70 p-2 flex items-center gap-2">
+    <span class="text-[#993f3b] opacity-70">{{ errorMessage() }}</span>
+  </div>
+  } @else if (devicesWithRealtimeData().length < 1) {
   <div class="text-m text-heading/70 p-2 flex items-center gap-2">
     <span class="material-symbols-rounded text-[#993f3b] opacity-70 spin-slow">
       autorenew
@@ -51,7 +55,6 @@
               </g>
             </svg>
           </figure>
-          <!-- <div class="temperature__value"> -->
           <div
             [class]="
               alert()?.deviceName === device.serial &&
@@ -61,8 +64,6 @@
             "
           >
             ej tillgänglig
-            <!-- {{ device.temperature ? device.temperature : "ej tillgänglig" }} -->
-            <!-- {{ device.temperature && device.temperatureUnit }} -->
           </div>
         </div>
         <div class="sensor-list__temperature-time">
@@ -83,12 +84,7 @@
               />
             </svg>
           </figure>
-          <div class="time__value">
-            ej tillgänglig
-            <!-- {{
-              device.temperatureTime ? device.temperatureTime : "ej tillgänglig"
-            }} -->
-          </div>
+          <div class="time__value">ej tillgänglig</div>
         </div>
       </div>
       <div class="sensor-list__co2">
@@ -162,7 +158,6 @@
               </g>
             </svg>
           </figure>
-          <!-- <div class="co2__value"> -->
           <div
             [class]="
               alert()?.deviceName === device.serial && alert()?.type === 'co2'
@@ -171,8 +166,6 @@
             "
           >
             ej tillgänglig
-            <!-- {{ device.co2 ? device.co2 : "ej tillgänglig" }}
-            {{ device.co2 && device.co2Unit }} -->
           </div>
         </div>
         <div class="sensor-list__co2-time">
@@ -193,10 +186,7 @@
               />
             </svg>
           </figure>
-          <div class="time__value">
-            ej tillgägnlig
-            <!-- {{ device.co2Time ? device.co2Time : "ej tillgänglig" }} -->
-          </div>
+          <div class="time__value">ej tillgägnlig</div>
         </div>
       </div>
     </li>
@@ -204,8 +194,7 @@
   </ul>
   } @else {
   <ul class="sensor-list">
-    @if (devicesWithRealtimeData().length > 0) { @for (device of
-    devicesWithRealtimeData(); track $index) {
+    @for (device of devicesWithRealtimeData(); track $index) {
     <li class="sensor-list__item">
       <div class="sensor-list__device-info">
         <div class="sensor-list__device-serial">
@@ -393,7 +382,7 @@
         </div>
       </div>
     </li>
-    } } @else { }
+    }
   </ul>
   }
 </div>

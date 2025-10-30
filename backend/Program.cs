@@ -62,7 +62,7 @@ else
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
       .WithOrigins("http://localhost:4200"
-      // , "https://innoviahub-app-6hrgl.ondigitalocean.app"
+      ,"https://jellyfish-app-ouuck.ondigitalocean.app"
       )
       .AllowAnyHeader()
       .AllowAnyMethod()

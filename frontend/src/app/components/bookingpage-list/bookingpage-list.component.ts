@@ -129,8 +129,8 @@ export class BookingpageListComponent {
   private getUtcDayRange(d: Date) {
     const isoDate = d.toISOString().split('T')[0]; // YYYY-MM-DD baserat på d i UTC
     return {
-      start: new Date(`${isoDate}T00:00:00.000Z`),
-      end: new Date(`${isoDate}T23:59:59.999Z`),
+      start: new Date(`${isoDate}T00:00:00.000+01:00`),
+      end: new Date(`${isoDate}T23:59:59.999+01:00`),
     };
   }
 }

@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
   computed,
   inject,
@@ -23,7 +24,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
   templateUrl: './booking-detail.component.html',
 })
-export class BookingDetailComponent implements OnChanges {
+export class BookingDetailComponent implements OnChanges, OnInit {
   @Input() bookingId: number | null = null;
   saved = output<void>();
   deleted = output<void>();
@@ -37,10 +38,12 @@ export class BookingDetailComponent implements OnChanges {
   booking?: BookingRead;
 
   form = this.fb.group({
+    // Temporarily, startTime and endTime are hard-coded, and
+    // endDate is set to the same value as startDate in ngOnInit
     startDate: ['', Validators.required], // yyyy-MM-dd
-    startTime: ['', Validators.required], // HH:mm
+    startTime: ['00:00', Validators.required], // HH:mm
     endDate: ['', Validators.required],
-    endTime: ['', Validators.required],
+    endTime: ['23:59', Validators.required],
   });
 
   title = computed(() =>
@@ -52,6 +55,23 @@ export class BookingDetailComponent implements OnChanges {
   );
 
   currentDate: string = new Date().toISOString().split('T')[0];
+
+  ngOnInit(): void {
+    // Watch for changes on startDate
+    this.form.get('startDate')?.valueChanges.subscribe((startDateValue) => {
+      const endDateControl = this.form.get('endDate');
+
+      if (startDateValue) {
+        // Enable endDate and set it equal to startDate
+        endDateControl?.enable({ emitEvent: false });
+        endDateControl?.setValue(startDateValue, { emitEvent: false });
+      } else {
+        // Disable and clear if startDate is removed
+        endDateControl?.disable({ emitEvent: false });
+        endDateControl?.reset();
+      }
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('bookingId' in changes) this.load();
@@ -70,13 +90,32 @@ export class BookingDetailComponent implements OnChanges {
     this.api.getById(this.bookingId).subscribe({
       next: (b) => {
         this.booking = b;
+
         const s = new Date(b.startTime);
         const e = new Date(b.endTime);
+
+        // Format in Swedish local time
+        const formatLocal = (date: Date) => {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+
+          return {
+            date: `${year}-${month}-${day}`,
+            time: `${hours}:${minutes}`,
+          };
+        };
+
+        const start = formatLocal(s);
+        const end = formatLocal(e);
+
         this.form.setValue({
-          startDate: s.toISOString().slice(0, 10),
-          startTime: s.toISOString().slice(11, 16),
-          endDate: e.toISOString().slice(0, 10),
-          endTime: e.toISOString().slice(11, 16),
+          startDate: start.date,
+          startTime: start.time,
+          endDate: end.date,
+          endTime: end.time,
         });
       },
       error: (err) => {

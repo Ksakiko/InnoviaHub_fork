@@ -147,7 +147,9 @@ img {
 
 @media (min-width: 768px) {
   .page-container__inner {
-    padding: var(--page-margin-tablet);
+    padding: var(--page-margin-tablet) var(--page-margin-tablet)
+      calc(var(--page-margin-tablet) + var(--menubar-mobile-height))
+      var(--page-margin-tablet);
   }
 }
 

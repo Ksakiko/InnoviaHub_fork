@@ -127,6 +127,7 @@ export class BookingpagePaneComponent implements OnInit {
     if (sel?.date) {
       // Bygg *UTC*-dygn för API:t (matchar backend)
       const isoDate = sel.date.toISOString().split('T')[0];
+
       this.start = new Date(`${isoDate}T00:00:00.000Z`);
       this.end = new Date(`${isoDate}T23:59:59.999Z`);
     } else {
@@ -141,12 +142,12 @@ export class BookingpagePaneComponent implements OnInit {
   }
 
   onBookingCommitted() {
-    console.log(
-      '[pane] bookingCommitted – refreshing…',
-      this.selectedTypeId,
-      this.start,
-      this.end
-    );
+    // console.log(
+    //   '[pane] bookingCommitted – refreshing…',
+    //   this.selectedTypeId,
+    //   this.start,
+    //   this.end
+    // );
     if (this.selectedTypeId && this.start && this.end) {
       this.refreshResources();
       this.refreshAllTypeCounts();

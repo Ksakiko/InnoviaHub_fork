@@ -61,10 +61,9 @@ else
 // CORS för att tillåta frontend att anropa API
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
-   //    .WithOrigins("http://localhost:4200"
-   //    ,"https://jellyfish-app-ouuck.ondigitalocean.app"
-   //    )
-    .AllowAnyOrigin()
+      .WithOrigins("http://localhost:4200"
+      ,"https://jellyfish-app-ouuck.ondigitalocean.app"
+      )
       .AllowAnyHeader()
       .AllowAnyMethod()
       .AllowCredentials()
@@ -104,6 +103,7 @@ app.MapControllers();
 app.MapHub<BookingHub>("/hubs/bookings");
 
 app.Run();
+
 
 
 

@@ -135,7 +135,7 @@ export class BookingDetailComponent implements OnChanges, OnInit {
   private toIso(date: string, time: string) {
     const [y, m, d] = date.split('-').map(Number);
     const [hh, mm] = time.split(':').map(Number);
-    return new Date(Date.UTC(y, m - 1, d, hh, mm, 0)).toISOString();
+    return new Date(y, m - 1, d, hh, mm, 0).toISOString();
   }
 
   save() {

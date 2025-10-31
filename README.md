@@ -7,23 +7,37 @@ Ett enkelt bokningssystem för resurser och faciliteter.
 InnoviaHub är en webbapplikation där användare kan:
 
 - Logga in säkert med Microsoft-konto
-- Boka rum och resurser
-- Se tillgängliga tider
+- Boka rum och resurser (Just nu går det bara att boka en hel dag per resurs)
+- Se tillgängliga resurser i realtid
 - Hantera sina bokningar
 
-## Teknik
+## Produktionslänk
+
+https://jellyfish-app-ouuck.ondigitalocean.app/
+
+## Tekniker och ramverk
 
 **Frontend (Webbsida):**
 
 - Angular 19
 - TypeScript
 - Azure Entra ID för inloggning
+- Tailwind CSS (v.^3.3.5)
+- ngx-toastr (v.^19.1.0)
 
 **Backend (Server):**
 
 - .NET 9.0
 - ASP.NET Core API
 - Entity Framework
+
+**Databas**
+
+- MySQL
+
+**Realtidskommunikation:**
+
+- SignalR (frontend och backend)
 
 ## Kom igång
 
@@ -42,11 +56,11 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 1. **Klona projektet:**
 
    ```bash
-   git clone https://github.com/villetf/InnoviaHub.git
-   cd InnoviaHub
+   git clone https://github.com/Ksakiko/InnoviaHub_fork.git
+   cd InnoviaHub_fork
    ```
 
-2. **Skapa en `.env`-fil i `backend`-mappen**
+2. **Skapa en `.env`-fil i mappen `backend` för AI-funktionen**
 
    Lägg till följande med en giltig API-nyckel från OpenAI i filen
 
@@ -65,6 +79,8 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 
 4. **Starta frontend (webbsida):**
 
+   Öppna en separat terminal från backend. Kontrollera att du befinner dig i projektmappen InnoviaHub_fork och kör sedan:
+
    ```bash
    cd frontend
    npm install
@@ -75,11 +91,15 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 
 ## Hur man använder systemet
 
-1. **Öppna webbläsaren** och gå till <http://localhost:4200>
-2. **Klicka "Login with Microsoft"** för att logga in
-3. **Välj datum** med datumväljaren
-4. **Boka resurser** (kommer snart)
-5. **Logga ut** när du är klar
+1. Öppna webbläsaren och gå till <http://localhost:4200>
+2. Klicka **Login with Microsoft** för att logga in
+3. Gå till bokningssidan genom att klicka på **Boka-ikonen** i menyn
+4. Välj en resurstyp från flikarna längst upp på sidan
+5. Välj ett datum med datumväljaren
+6. Välj en specifik resurs från listan till höger på sidan
+7. Boka resurser genom att klicka på **Boka-knappen** längst ner i resurslistan
+8. Kolla bokade tider och resurser på **Profilsidan**
+9. **Logga ut** när du är klar
 
 ## Utveckling
 
@@ -92,7 +112,7 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 ### Brancher
 
 - `main` - Huvudbranch (stabil kod)
-- `dev` - Utvecklingsbranch
+- `develop` - Utvecklingsbranch
 
 ### Testning
 

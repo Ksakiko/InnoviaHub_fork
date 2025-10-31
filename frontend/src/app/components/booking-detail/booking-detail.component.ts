@@ -94,7 +94,10 @@ export class BookingDetailComponent implements OnChanges, OnInit {
         const s = new Date(b.startTime);
         const e = new Date(b.endTime);
 
-        // Format in Swedish local time
+        // console.log(s);
+        // console.log(e);
+
+        // // Format in Swedish local time
         const formatLocal = (date: Date) => {
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -135,7 +138,7 @@ export class BookingDetailComponent implements OnChanges, OnInit {
   private toIso(date: string, time: string) {
     const [y, m, d] = date.split('-').map(Number);
     const [hh, mm] = time.split(':').map(Number);
-    return new Date(y, m - 1, d, hh, mm, 0).toISOString();
+    return new Date(Date.UTC(y, m - 1, d, hh, mm, 0)).toISOString();
   }
 
   save() {

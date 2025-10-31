@@ -127,28 +127,11 @@ export class BookingpageListComponent {
   }
 
   private getUtcDayRange(d: Date) {
-    // const isoDate = d.toISOString().split('T')[0]; // YYYY-MM-DD baserat på d i UTC
-    // return {
-    //   start: new Date(`${isoDate}T00:00:00.000Z`),
-    //   end: new Date(`${isoDate}T23:59:59.999Z`),
-    // };
-
-    // Extract local date parts (this will reflect the user’s local timezone)
-    const y = d.getFullYear();
-    const m = d.getMonth();
-    const day = d.getDate();
-
-    // Create Swedish local times
-    const startLocal = new Date(y, m, day, 0, 0, 0, 0); // 00:00 Sweden
-    const endLocal = new Date(y, m, day, 23, 59, 59, 999); // 23:59:59.999 Sweden
-
-    // Convert to UTC ISO strings for backend
-    const startUtcIso = startLocal.toISOString();
-    const endUtcIso = endLocal.toISOString();
+    const isoDate = d.toISOString().split('T')[0]; // YYYY-MM-DD baserat på d i UTC
 
     return {
-      start: new Date(startUtcIso),
-      end: new Date(endUtcIso),
+      start: new Date(`${isoDate}T00:00:00.000Z`),
+      end: new Date(`${isoDate}T23:59:59.999Z`),
     };
   }
 }

@@ -40,13 +40,28 @@ public class AppDbContext : DbContext
       modelBuilder.Entity<Resource>().HasData(
          new Resource { Id = 1, Name = "Skrivbord 1", ResourceTypeId = 1 },
          new Resource { Id = 2, Name = "Skrivbord 2", ResourceTypeId = 1 },
-         new Resource { Id = 3, Name = "Mötesrum 1", ResourceTypeId = 2 },
-         new Resource { Id = 4, Name = "Mötesrum 2", ResourceTypeId = 2 },
-         new Resource { Id = 5, Name = "VR-glasögon 1", ResourceTypeId = 3 },
-         new Resource { Id = 6, Name = "AI-server 1", ResourceTypeId = 4 }
+         new Resource { Id = 3, Name = "Skrivbord 3", ResourceTypeId = 1 },
+         new Resource { Id = 4, Name = "Skrivbord 4", ResourceTypeId = 1 },
+         new Resource { Id = 5, Name = "Skrivbord 5", ResourceTypeId = 1 },
+         new Resource { Id = 6, Name = "Skrivbord 6", ResourceTypeId = 1 },
+         new Resource { Id = 7, Name = "Skrivbord 7", ResourceTypeId = 1 },
+         new Resource { Id = 8, Name = "Skrivbord 8", ResourceTypeId = 1 },
+         new Resource { Id = 9, Name = "Skrivbord 9", ResourceTypeId = 1 },
+         new Resource { Id = 10, Name = "Skrivbord 10", ResourceTypeId = 1 },
+         new Resource { Id = 11, Name = "Skrivbord 11", ResourceTypeId = 1 },
+         new Resource { Id = 12, Name = "Skrivbord 12", ResourceTypeId = 1 },
+         new Resource { Id = 13, Name = "Skrivbord 13", ResourceTypeId = 1 },
+         new Resource { Id = 14, Name = "Skrivbord 14", ResourceTypeId = 1 },
+         new Resource { Id = 15, Name = "Skrivbord 15", ResourceTypeId = 1 },
+         new Resource { Id = 16, Name = "Mötesrum 1", ResourceTypeId = 2 },
+         new Resource { Id = 17, Name = "Mötesrum 2", ResourceTypeId = 2 },
+         new Resource { Id = 18, Name = "Mötesrum 3", ResourceTypeId = 2 },
+         new Resource { Id = 19, Name = "Mötesrum 4", ResourceTypeId = 2 },
+         new Resource { Id = 20, Name = "VR-headset 1", ResourceTypeId = 3 },
+         new Resource { Id = 21, Name = "VR-headset 2", ResourceTypeId = 3 },
+         new Resource { Id = 22, Name = "VR-headset 3", ResourceTypeId = 3 },
+         new Resource { Id = 23, Name = "VR-headset 4", ResourceTypeId = 3 },
+         new Resource { Id = 24, Name = "AI-server 1", ResourceTypeId = 4 }
       );
-
-      // Tog bort alla hårdkodade bookings med fake användar-ID
-      // No initial booking data - will be created when users make bookings med riktiga Azure AD-ID och namn
    }
 }

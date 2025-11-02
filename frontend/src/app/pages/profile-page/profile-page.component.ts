@@ -117,7 +117,7 @@ export class ProfilePageComponent implements OnInit {
   startEdit() {
     if (!this.selectedBooking) return;
 
-    console.log('🔍 Starting edit for booking:', this.selectedBooking);
+    // console.log('🔍 Starting edit for booking:', this.selectedBooking);
 
     this.isEditing = true;
     // Populate edit form with current booking data
@@ -135,8 +135,8 @@ export class ProfilePageComponent implements OnInit {
       originalEndTime: this.selectedBooking.endTime,
     };
 
-    console.log('🔍 Edit form populated:', this.editForm);
-    console.log('🔍 Min date set to:', this.minDate);
+    // console.log('🔍 Edit form populated:', this.editForm);
+    // console.log('🔍 Min date set to:', this.minDate);
   }
 
   cancelEdit() {
@@ -180,15 +180,15 @@ export class ProfilePageComponent implements OnInit {
 
     try {
       // Debug information
-      console.log('🔍 EditForm data:', this.editForm);
-      console.log('🔍 Selected booking:', this.selectedBooking);
+      // console.log('🔍 EditForm data:', this.editForm);
+      // console.log('🔍 Selected booking:', this.selectedBooking);
 
       // Kombinera nytt datum med bevarade tider
       const originalStartTime = new Date(this.editForm.originalStartTime);
       const originalEndTime = new Date(this.editForm.originalEndTime);
 
-      console.log('🔍 Original times:', { originalStartTime, originalEndTime });
-      console.log('🔍 Booking date string:', this.editForm.bookingDate);
+      // console.log('🔍 Original times:', { originalStartTime, originalEndTime });
+      // console.log('🔍 Booking date string:', this.editForm.bookingDate);
 
       // Skapa datum från bookingDate-strängen och sätt rätt tid
       const dateParts = this.editForm.bookingDate.split('-');
@@ -235,15 +235,15 @@ export class ProfilePageComponent implements OnInit {
         originalEndTime.getMilliseconds()
       );
 
-      console.log('🔍 Original day difference:', originalDayDiff);
-      console.log('🔍 Start date only:', startDateOnly);
-      console.log('🔍 End date only:', endDateOnly);
+      // console.log('🔍 Original day difference:', originalDayDiff);
+      // console.log('🔍 Start date only:', startDateOnly);
+      // console.log('🔍 End date only:', endDateOnly);
 
-      console.log('🔍 Final times:', { newStartTime, newEndTime });
-      console.log(
-        '🔍 Time difference (ms):',
-        newEndTime.getTime() - newStartTime.getTime()
-      );
+      // console.log('🔍 Final times:', { newStartTime, newEndTime });
+      // console.log(
+      //   '🔍 Time difference (ms):',
+      //   newEndTime.getTime() - newStartTime.getTime()
+      // );
 
       const updateDto = {
         userId: userId,
@@ -254,7 +254,7 @@ export class ProfilePageComponent implements OnInit {
         status: this.editForm.status,
       };
 
-      console.log('🔍 Update DTO:', updateDto);
+      // console.log('🔍 Update DTO:', updateDto);
 
       await this.bookingService
         .update(this.selectedBooking.id, updateDto)
@@ -265,9 +265,9 @@ export class ProfilePageComponent implements OnInit {
       this.isEditing = false;
       this.errorMessage = '';
 
-      console.log('✅ Booking updated successfully');
+      // console.log('✅ Booking updated successfully');
     } catch (error) {
-      console.error('❌ Fel vid uppdatering av bokning:', error);
+      // console.error('❌ Fel vid uppdatering av bokning:', error);
       this.errorMessage = 'Kunde inte uppdatera bokningen';
     }
   }
@@ -305,9 +305,9 @@ export class ProfilePageComponent implements OnInit {
       this.isEditing = false;
       this.errorMessage = '';
 
-      console.log('✅ Booking deleted successfully');
+      // console.log('✅ Booking deleted successfully');
     } catch (error) {
-      console.error('❌ Fel vid radering av bokning:', error);
+      // console.error('❌ Fel vid radering av bokning:', error);
       this.errorMessage = 'Kunde inte radera bokningen';
     }
   }

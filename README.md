@@ -33,7 +33,7 @@ https://jellyfish-app-ouuck.ondigitalocean.app/
 
 **Databas**
 
-- MySQL
+- EF Core In-Memory Database (för tillfället)
 
 **Realtidskommunikation:**
 

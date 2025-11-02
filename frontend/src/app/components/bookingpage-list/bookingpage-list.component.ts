@@ -127,11 +127,18 @@ export class BookingpageListComponent {
   }
 
   private getUtcDayRange(d: Date) {
-    const isoDate = d.toISOString().split('T')[0]; // YYYY-MM-DD baserat på d i UTC
+    // Start of the local day (00:00:00)
+    const startOfDay = new Date(d);
+    startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00.000
 
+    // End of the local day (23:59:59.999)
+    const endOfDay = new Date(d);
+    endOfDay.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
+
+    // Convert the local days/times to UTC and return them
     return {
-      start: new Date(`${isoDate}T00:00:00.000Z`),
-      end: new Date(`${isoDate}T23:59:59.999Z`),
+      start: new Date(startOfDay.toISOString()),
+      end: new Date(endOfDay.toISOString()),
     };
   }
 }
